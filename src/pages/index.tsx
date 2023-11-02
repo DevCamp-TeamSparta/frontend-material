@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -77,10 +78,9 @@ export default function Home() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <div
-                className={cn("space-y-3", {
-                  hidden: step === 1,
-                })}
+              <motion.div
+                className={cn("space-y-3")}
+                animate={{ translateX: `${step * -100}%` }}
               >
                 <FormField
                   control={form.control}
@@ -136,11 +136,10 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-              </div>
-              <div
-                className={cn("space-y-3", {
-                  hidden: step === 0,
-                })}
+              </motion.div>
+              <motion.div
+                className={cn("space-y-3")}
+                animate={{ translateX: `${(1 - step) * 100}%` }}
               >
                 <FormField
                   control={form.control}
@@ -168,7 +167,7 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-              </div>
+              </motion.div>
               <div className={"flex gap-2"}>
                 <Button className={cn({ hidden: step === 0 })} type="submit">
                   계정 등록하기
