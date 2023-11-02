@@ -14,6 +14,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -28,6 +36,7 @@ export default function Home() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
+      role: "",
       username: "",
       password: "",
       confirmPassword: "",
@@ -48,8 +57,8 @@ export default function Home() {
     >
       <Card className={cn("w-[380px]")}>
         <CardHeader>
-          <CardTitle>Create username</CardTitle>
-          <CardDescription>You can always change it later.</CardDescription>
+          <CardTitle>계정을 생성합니다</CardTitle>
+          <CardDescription>필수 정보를 입력헤볼게요.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -59,9 +68,9 @@ export default function Home() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>이름</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input placeholder="홍길동" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -72,10 +81,38 @@ export default function Home() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>이메일</FormLabel>
                     <FormControl>
-                      <Input placeholder="email" {...field} />
+                      <Input
+                        placeholder="hello@sparta-devcamp.com"
+                        {...field}
+                      />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>역할</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="역할을 선택해주세요" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="developer">개발자</SelectItem>
+                        <SelectItem value="designer">디자이너</SelectItem>
+                        <SelectItem value="product-manager">PM</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -85,13 +122,9 @@ export default function Home() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>비밀번호</FormLabel>
                     <FormControl>
-                      <Input
-                        type={"password"}
-                        placeholder="password"
-                        {...field}
-                      />
+                      <Input type={"password"} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,19 +135,15 @@ export default function Home() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>비밀번호 확인</FormLabel>
                     <FormControl>
-                      <Input
-                        type={"password"}
-                        placeholder="confirm password"
-                        {...field}
-                      />
+                      <Input type={"password"} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">계정 등록하기</Button>
             </form>
           </Form>
         </CardContent>
