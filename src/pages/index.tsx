@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -28,10 +29,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/validators/auth";
 import { z } from "zod";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 type RegisterInput = z.infer<typeof registerSchema>;
 
 export default function Home() {
+  const [step, setStep] = useState<number>(0);
+
+  const { toast } = useToast();
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -47,8 +53,16 @@ export default function Home() {
   console.log(form.watch());
 
   function onSubmit(data: RegisterInput) {
+    const { password, confirmPassword } = data;
+    if (password !== confirmPassword) {
+      toast({
+        title: "비밀번호가 일치하지 않습니다.",
+        variant: "destructive",
+        duration: 1000,
+      });
+      return;
+    }
     alert(JSON.stringify(data, null, 4));
-    console.log(data);
   }
 
   return (
@@ -63,87 +77,134 @@ export default function Home() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이름</FormLabel>
-                    <FormControl>
-                      <Input placeholder="홍길동" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이메일</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="hello@sparta-devcamp.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>역할</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+              <div
+                className={cn("space-y-3", {
+                  hidden: step === 1,
+                })}
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이름</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="역할을 선택해주세요" />
-                        </SelectTrigger>
+                        <Input placeholder="홍길동" {...field} />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="developer">개발자</SelectItem>
-                        <SelectItem value="designer">디자이너</SelectItem>
-                        <SelectItem value="product-manager">PM</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>비밀번호</FormLabel>
-                    <FormControl>
-                      <Input type={"password"} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>비밀번호 확인</FormLabel>
-                    <FormControl>
-                      <Input type={"password"} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">계정 등록하기</Button>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이메일</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="hello@sparta-devcamp.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>역할</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="역할을 선택해주세요" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="developer">개발자</SelectItem>
+                          <SelectItem value="designer">디자이너</SelectItem>
+                          <SelectItem value="product-manager">PM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div
+                className={cn("space-y-3", {
+                  hidden: step === 0,
+                })}
+              >
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>비밀번호</FormLabel>
+                      <FormControl>
+                        <Input type={"password"} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>비밀번호 확인</FormLabel>
+                      <FormControl>
+                        <Input type={"password"} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className={"flex gap-2"}>
+                <Button className={cn({ hidden: step === 0 })} type="submit">
+                  계정 등록하기
+                </Button>
+                <Button
+                  type="button"
+                  className={cn({ hidden: step === 1 })}
+                  onClick={() => {
+                    form.trigger(["email", "username", "role"]);
+
+                    // const emailState = form.formState.errors.email;
+                    const emailState = form.getFieldState("email");
+                    const usernameState = form.getFieldState("username");
+                    const roleState = form.getFieldState("role");
+
+                    if (!emailState.isDirty || emailState.invalid) return;
+                    if (!usernameState.isDirty || usernameState.invalid) return;
+                    if (!roleState.isDirty || roleState.invalid) return;
+
+                    setStep(1);
+                  }}
+                >
+                  다음 단계로
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+                <Button
+                  type="button"
+                  variant={"ghost"}
+                  className={cn({ hidden: step === 0 })}
+                  onClick={() => {
+                    setStep(0);
+                  }}
+                >
+                  이전 단계로
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
