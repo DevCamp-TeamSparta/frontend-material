@@ -67,9 +67,7 @@ export default function Home() {
   }
 
   return (
-    <div
-      className={"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"}
-    >
+    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
       <Card className={cn("w-[380px]")}>
         <CardHeader>
           <CardTitle>계정을 생성합니다</CardTitle>
@@ -77,10 +75,14 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="relative space-y-3 overflow-x-hidden"
+            >
               <motion.div
                 className={cn("space-y-3")}
                 animate={{ translateX: `${step * -100}%` }}
+                transition={{ ease: "easeInOut" }}
               >
                 <FormField
                   control={form.control}
@@ -138,8 +140,12 @@ export default function Home() {
                 />
               </motion.div>
               <motion.div
-                className={cn("space-y-3")}
+                className={cn("space-y-3 absolute top-0 left-0 right-0")}
                 animate={{ translateX: `${(1 - step) * 100}%` }}
+                style={{ translateX: `${(1 - step) * 100}%` }}
+                transition={{
+                  ease: "easeInOut",
+                }}
               >
                 <FormField
                   control={form.control}

@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark">
+    <ThemeProvider attribute="class" defaultTheme="light">
       <div className={"min-h-screen"}>
         <Component {...pageProps} />
         <Toaster />
