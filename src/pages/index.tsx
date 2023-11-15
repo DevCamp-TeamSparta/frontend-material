@@ -42,6 +42,7 @@ export default function Home() {
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      phone: "",
       email: "",
       role: "",
       username: "",
@@ -115,6 +116,19 @@ export default function Home() {
                 />
                 <FormField
                   control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>연락처</FormLabel>
+                      <FormControl>
+                        <Input placeholder="01000000000" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="role"
                   render={({ field }) => (
                     <FormItem>
@@ -129,9 +143,8 @@ export default function Home() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="developer">개발자</SelectItem>
-                          <SelectItem value="designer">디자이너</SelectItem>
-                          <SelectItem value="product-manager">PM</SelectItem>
+                          <SelectItem value="admin">관리자</SelectItem>
+                          <SelectItem value="user">일반사용자</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -182,13 +195,13 @@ export default function Home() {
                   type="button"
                   className={cn({ hidden: step === 1 })}
                   onClick={() => {
-                    form.trigger(["email", "username", "role"]);
-
-                    // const emailState = form.formState.errors.email;
+                    form.trigger(["phone", "email", "username", "role"]);
+                    const phoneState = form.getFieldState("phone");
                     const emailState = form.getFieldState("email");
                     const usernameState = form.getFieldState("username");
                     const roleState = form.getFieldState("role");
 
+                    if (!phoneState.isDirty || phoneState.invalid) return;
                     if (!emailState.isDirty || emailState.invalid) return;
                     if (!usernameState.isDirty || usernameState.invalid) return;
                     if (!roleState.isDirty || roleState.invalid) return;
